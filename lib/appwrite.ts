@@ -1,5 +1,12 @@
 import { CreateUserParams, SignInParams } from "@/type";
-import { Account, Avatars, Client, Databases, ID } from "react-native-appwrite";
+import {
+  Account,
+  Avatars,
+  Client,
+  Databases,
+  ID,
+  Query,
+} from "react-native-appwrite";
 
 export const appwriteConfig = {
   platform: "com.rohit.fastfood",
@@ -28,7 +35,7 @@ export const createUser = async ({
   try {
     const newAccount = await account.create(ID.unique(), email, password, name);
     if (!newAccount) throw Error;
-    await SignIn({ email, password });
+    await SignInUser({ email, password });
     const avatarUrl = await avatars.getInitialsURL(name);
     return await databases.createDocument(
       appwriteConfig.databaseId!,
@@ -45,11 +52,30 @@ export const createUser = async ({
     throw new Error(error as string);
   }
 };
-export const SignIn = async ({ email, password }: SignInParams) => {
+export const SignInUser = async ({ email, password }: SignInParams) => {
   try {
     const session = await account.createEmailPasswordSession(email, password);
     return session;
   } catch (error) {
     throw new Error(error as string);
+  }
+};
+export const getCurrentUser = async () => {
+  try {
+    const currentAccount = await account.get();
+    if (!currentAccount) throw Error;
+
+    const currentUser = await databases.listDocuments(
+      appwriteConfig.databaseId!,
+      appwriteConfig.userCollectionId!,
+      [Query.equal("accountId", currentAccount.$id)]
+    );
+
+    if (!currentUser) throw Error;
+
+    return currentUser.documents[0];
+  } catch (e) {
+    console.log(e);
+    throw new Error(e as string);
   }
 };
