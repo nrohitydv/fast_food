@@ -1,5 +1,7 @@
 import CardButton from "@/components/CardButton";
+import Filter from "@/components/Filter";
 import MenuCard from "@/components/MenuCard";
+import SearchBar from "@/components/SearchBar";
 import { getCategories, getMenu } from "@/lib/appwrite";
 import useAppwrite from "@/lib/useAppwrite";
 import { MenuItem } from "@/type";
@@ -61,8 +63,8 @@ const Search = () => {
               </View>
               <CardButton />
             </View>
-            <Text>Search</Text>
-            <Text>Filters</Text>
+            <SearchBar />
+            <Filter categories={categories!} />
           </View>
         )}
         ListEmptyComponent={() => !loading && <Text>No results found</Text>}
