@@ -1,4 +1,4 @@
-import CardButton from "@/components/CardButton";
+import CardButton from "@/components/CartButton";
 import Filter from "@/components/Filter";
 import MenuCard from "@/components/MenuCard";
 import SearchBar from "@/components/SearchBar";
